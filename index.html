@@ -6,37 +6,66 @@
     <title>kareem's website :-)</title>
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="style.css">
-
     <style>
-    
-      html,
+      /* make the body a full-height column so the footer can sit at the bottom */
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ---------- CENTER CONTENT ---------- */
+      main {
+        flex: 1;                 /* fills the space, pushing footer down */
+        display: flex;
+        align-items: center;     /* vertical center */
+        justify-content: center; /* horizontal center */
+      }
+
+      .center-btn {
+        font-size: 28px;
+        padding: 14px 32px;
+        border: 2px solid black;
+        border-radius: 4px;
+        background: white;
+        color: black;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+      }
+      .center-btn:hover {
+        transform: scale(1.08);
+        background: black;
+        color: white;
+      }
 
       /* ---------- FOOTER ---------- */
       .footer {
-        margin-top: auto;   /* space below content */
         margin-bottom: 10px;
         width: 100%;
         text-align: center;
         font-size: 18px;
         color: black;
       }
-
-
       .footer span {
         display: inline-block;
         transition: transform 2s ease;
       }
-
       .footer span:hover {
         transform: scale(1.5);
         transition: transform 0.15s ease;
       }
-
     </style>
   </head>
-
   <body>
-  
+
+    <!-- centered button -->
+    <main>
+      <button class="center-btn">kareem</button>
+    </main>
+
     <!-- footer -->
     <div class="footer">© 2026 kareem el naggar</div>
 
@@ -51,10 +80,8 @@
           element.appendChild(span);
         });
       }
-
       document.querySelectorAll(".topnav a").forEach(wrapLetters);
       wrapLetters(document.querySelector(".footer"));
-      
     </script>
   </body>
 </html>
