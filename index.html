@@ -80,7 +80,6 @@
         });
       }
       document.querySelectorAll(".topnav a").forEach(wrapLetters);
-      wrapLetters(document.querySelector(".footer"));
       
       function makeDraggable(el) {
         let dx = 0, dy = 0, dragging = false;
@@ -117,9 +116,6 @@
       }
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
-
-      // 5. Trigger the function automatically when the page loads
-      window.addEventListener('DOMContentLoaded', randomizeButtonBackground);
 
   // Today's date variable:
   const dateElement = document.getElementById('current-date');
