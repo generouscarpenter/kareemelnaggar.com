@@ -29,9 +29,9 @@
         font-size: 36px;
         padding: 8px 10px;
         white-space: nowrap;
-        border: 0.5px solid black;
+        border: 1.5px solid black;
         border-radius: 2px;
-        background: rgba(255, 255, 255, 0.05); 
+        background: rgba(211, 211, 211, 0.297); 
         color: black;
         cursor: grab;
         touch-action: none;      /* stops touch from scrolling while dragging */
@@ -117,24 +117,6 @@
       }
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
-
-      function randomizeButtonBackground() {
-          // 1. Generate random values between 0 and 255 for R, G, and B
-          const r = Math.floor(Math.random() * 256);
-          const g = Math.floor(Math.random() * 256);
-          const b = Math.floor(Math.random() * 256);
-          
-          // 2. Set your desired fixed opacity (matching your current 0.5)
-          const opacity = 0.05; 
-          
-          // 3. Select the element using its CSS class name
-          const button = document.querySelector('.center-btn');
-          
-          // 4. Update the background style property if the button exists
-          if (button) {
-              button.style.background = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-          }
-      }
 
       // 5. Trigger the function automatically when the page loads
       window.addEventListener('DOMContentLoaded', randomizeButtonBackground);
