@@ -40,22 +40,6 @@
 
       .center-btn:active { cursor: grabbing; }
 
-      /* ---------- FOOTER ---------- */
-      .footer {
-        margin-bottom: 10px;
-        width: 100%;
-        text-align: center;
-        font-size: 18px;
-        color: black;
-      }
-      .footer span {
-        display: inline-block;
-        transition: transform 2s ease;
-      }
-      .footer span:hover {
-        transform: scale(1.5);
-        transition: transform 0.15s ease;
-      }
     </style>
   </head>
   <body>
@@ -65,8 +49,6 @@
       <button class="center-btn">kareem el naggar</button>
     </main>
 
-    <!-- footer -->
-    <div class="footer"><p><span id="current-date"></span></p></div>
 
     <!-- ---------- PER-LETTER SCRIPT ---------- -->
     <script>
@@ -80,6 +62,7 @@
         });
       }
       document.querySelectorAll(".topnav a").forEach(wrapLetters);
+      wrapLetters(document.querySelector(".footer"));
       
       function makeDraggable(el) {
         let dx = 0, dy = 0, dragging = false;
@@ -117,7 +100,10 @@
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
 
-  // Today's date variable:
+      // 5. Trigger the function automatically when the page loads
+      window.addEventListener('DOMContentLoaded', randomizeButtonBackground);
+
+  // Today's date variable"
   const dateElement = document.getElementById('current-date');
   dateElement.textContent = new Date().toLocaleDateString();
 
