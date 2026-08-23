@@ -26,7 +26,7 @@
       }
 
       .center-btn {
-        font-size: 36px;
+        font-size: 18px;
         padding: 8px 10px;
         white-space: nowrap;
         border: 1.5px solid black;
@@ -62,7 +62,8 @@
         });
       }
       document.querySelectorAll(".topnav a").forEach(wrapLetters);
-      wrapLetters(document.querySelector(".footer"));
+      const footer = document.querySelector(".footer");
+      if (footer) wrapLetters(footer);
       
       function makeDraggable(el) {
         let dx = 0, dy = 0, dragging = false;
@@ -100,10 +101,7 @@
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
 
-      // 5. Trigger the function automatically when the page loads
-      window.addEventListener('DOMContentLoaded', randomizeButtonBackground);
-
-  // Today's date variable"
+  // Today's date variable
   const dateElement = document.getElementById('current-date');
   dateElement.textContent = new Date().toLocaleDateString();
 
