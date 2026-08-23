@@ -17,7 +17,7 @@
         margin-bottom: 10px;
         width: 100%;
         text-align: center;
-        font-size: 20px;
+        font-size: 14px;
         color: black;
       }
 
@@ -30,59 +30,6 @@
       .footer span:hover {
         transform: scale(1.5);
         transition: transform 0.15s ease;
-      }
-
-      /* ==================================================
-         📱 MOBILE LAYOUT FIX
-         ================================================== */
-      @media (max-width: 768px) {
-        .topnav {
-          flex-direction: column;
-          align-items: flex-start;
-          justify-content: flex-start;
-          top: 16px;
-          left: 16px;
-          width: auto;
-          padding: 0;
-          font-size: 26px;
-          gap: 6px;
-          z-index: 999;
-        }
-
-        /* stack sections vertically */
-        .about-layout {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 32px;
-        }
-      
-        .right-column {
-          width: 100%;
-          display: flex;
-          justify-content: center;
-        }
-        
-        .left-column {
-          display: none;
-        }
-        
-        .bio-box {
-          max-width: 680px;
-          margin: 5% 5% auto;
-          text-align: center;
-        }
-
-        .footer {
-          font-size: 16px;
-          padding-bottom: 8px;
-        }
-      }
-      
-      ::selection {
-        background-color: white;
-        color: black;
-        mix-blend-mode: difference
       }
 
     </style>
