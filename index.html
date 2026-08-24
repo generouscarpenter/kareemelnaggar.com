@@ -18,10 +18,7 @@
 
       /* ---------- CENTER CONTENT ---------- */
       main {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        pointer-events: none;
       }
 
       .other-btns-list {
@@ -38,6 +35,9 @@
       }
 
       .center-btn {
+        position: fixed;
+        top: 50%;
+        left: 50%;
         font-size: 26px;
         padding: 5px 4px;
         white-space: nowrap;
@@ -47,6 +47,7 @@
         cursor: grab;
         touch-action: none;      /* stops touch from scrolling while dragging */
         user-select: none;       /* stops text selection while dragging */
+        pointer-events: auto;
       }
 
 
@@ -70,8 +71,14 @@
         transform-origin: center;
       }
 
-      .center-btn:hover { transform: scale(1.1); } /* enlarges from the center */
+      .center-btn { transform: translate(-50%, -50%); }
+      .center-btn:hover { transform: translate(-50%, -50%) scale(1.1); } /* enlarges from the center */
       .other-btns:hover { transform: scale(1.1); } /* enlarges from the center */
+
+      .center-btn span, .other-btns span {
+        user-select: text;
+        -webkit-user-select: text;
+      }
 
 
 
@@ -114,6 +121,8 @@
         let dx = 0, dy = 0, dragging = false;
 
         el.addEventListener("pointerdown", (e) => {
+          if (e.target.closest("span")) return;
+
           const rect = el.getBoundingClientRect();
 
           // On first grab, break it out of flex layout and pin it in place
@@ -122,6 +131,7 @@
             el.style.margin = "0";
             el.style.left = (rect.left / window.innerWidth) * 100 + "%";
             el.style.top = (rect.top / window.innerHeight) * 100 + "%";
+            el.style.transform = "none";
           }
 
           // offset between the pointer and the button's top-left corner
