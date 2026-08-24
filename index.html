@@ -116,6 +116,14 @@
         el.addEventListener("pointerdown", (e) => {
           const rect = el.getBoundingClientRect();
 
+          if (el.classList.contains("center-btn")) {
+            dx = e.clientX - (rect.left + rect.width / 2);
+            dy = e.clientY - (rect.top + rect.height / 2);
+            dragging = true;
+            el.setPointerCapture(e.pointerId);
+            return;
+          }
+
           // On first grab, break it out of flex layout and pin it in place
           if (el.style.position !== "fixed") {
             el.style.position = "fixed";
@@ -135,8 +143,13 @@
 
         el.addEventListener("pointermove", (e) => {
           if (!dragging) return;
-          el.style.left = ((e.clientX - dx) / window.innerWidth) * 100 + "%";
-          el.style.top  = ((e.clientY - dy) / window.innerHeight) * 100 + "%";
+          if (el.classList.contains("center-btn")) {
+            el.style.left = ((e.clientX - dx) / window.innerWidth) * 100 + "%";
+            el.style.top = ((e.clientY - dy) / window.innerHeight) * 100 + "%";
+          } else {
+            el.style.left = ((e.clientX - dx) / window.innerWidth) * 100 + "%";
+            el.style.top  = ((e.clientY - dy) / window.innerHeight) * 100 + "%";
+          }
         });
 
         el.addEventListener("pointerup", (e) => {
