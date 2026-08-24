@@ -25,6 +25,13 @@
         justify-content: center; /* horizontal center */
       }
 
+      .other-btns-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
       .center-btn {
         font-size: 26px;
         padding: 5px 4px;
@@ -40,6 +47,7 @@
 
 
       .other-btns {
+        align-self: flex-start;
         font-size: 24px;
         padding: 5px 4px;
         white-space: nowrap;
@@ -65,9 +73,13 @@
     </style>
   </head>
   <body>
-    
-    <button class="other-btns">music</button><br>
-    <button class="other-btns">circuitry</button><br>
+    <div class="other-btns-list">
+      <button class="other-btns">music</button>
+      <button class="other-btns">circuitry</button>
+      <button class="other-btns">shows</button>
+      <button class="other-btns">everyday</button>
+      <button class="other-btns">media</button>
+    </div>
 
     <!-- centered button -->
     <main>
