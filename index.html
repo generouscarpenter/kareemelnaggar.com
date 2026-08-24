@@ -53,7 +53,12 @@
 
       .center-btn:active, .other-btns:active { cursor: grabbing; } /* allows buttons to be moved around */
 
-      .center-btn:hover, .other-btns:hover { font-size: 32px; } /* makes button text bigger when hovered over */
+      .center-btn, .other-btns {
+        transform-origin: center;
+      }
+
+      .center-btn:hover { transform: scale(1.25); } /* enlarges from the center */
+      .other-btns:hover { transform: scale(1.33); } /* enlarges from the center */
 
 
 
