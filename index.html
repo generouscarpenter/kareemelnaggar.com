@@ -25,7 +25,17 @@
         justify-content: center; /* horizontal center */
       }
 
+      .button-orbit {
+        position: relative;
+        width: min(90vw, 520px);
+        height: 260px;
+      }
+
       .center-btn {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
         font-size: 26px;
         padding: 5px 4px;
         white-space: nowrap;
@@ -40,6 +50,10 @@
 
 
       .other-btns {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) translate(var(--orbit-x), var(--orbit-y));
         font-size: 24px;
         padding: 5px 4px;
         white-space: nowrap;
@@ -57,8 +71,22 @@
         transform-origin: center;
       }
 
-      .center-btn:hover { transform: scale(1.1); } /* enlarges from the center */
-      .other-btns:hover { transform: scale(1.1); } /* enlarges from the center */
+      .center-btn:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+      } /* enlarges from the center */
+      .other-btns:hover {
+        transform: translate(-50%, -50%) translate(var(--orbit-x), var(--orbit-y)) scale(1.1);
+      } /* enlarges from the center */
+
+      .other-btns:nth-child(1) {
+        --orbit-x: 0;
+        --orbit-y: -100px;
+      }
+
+      .other-btns:nth-child(2) {
+        --orbit-x: 0;
+        --orbit-y: 100px;
+      }
 
 
 
@@ -68,9 +96,11 @@
 
     <!-- centered button -->
     <main>
-      <button class="other-btns">music</button>
-      <button class="other-btns">circuitry</button>
-      <button class="center-btn">kareem el naggar</button>
+      <div class="button-orbit">
+        <button class="other-btns">music</button>
+        <button class="other-btns">circuitry</button>
+        <button class="center-btn">kareem el naggar</button>
+      </div>
     </main>
 
 
