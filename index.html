@@ -27,10 +27,9 @@
 
       .center-btn {
         font-size: 26px;
-        padding: 4px 4px;
+        padding: 5px 4px;
         white-space: nowrap;
-        border: 1.5px solid black;
-        border-radius: 2px;
+        border: 1.25px solid black;
         background: rgba(237, 237, 237, 0.6); 
         color: black;
         cursor: grab;
@@ -38,7 +37,25 @@
         user-select: none;       /* stops text selection while dragging */
       }
 
-      .center-btn:active { cursor: grabbing; }
+
+
+      .other-btns {
+        font-size: 24px;
+        padding: 5px 4px;
+        white-space: nowrap;
+        border: 1.25px solid black;
+        background: rgba(237, 237, 237, 0.6); 
+        color: black;
+        cursor: grab;
+        touch-action: none;      /* stops touch from scrolling while dragging */
+        user-select: none;       /* stops text selection while dragging */
+      }
+
+      .center-btn:active, .other-btns:active { cursor: grabbing; } /* allows buttons to be moved around */
+
+      .center-btn:hover, .other-btns:hover { font-size: 32px; } /* makes button text bigger when hovered over */
+
+
 
     </style>
   </head>
@@ -100,6 +117,7 @@
       }
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
+      document.querySelectorAll(".other-btns").forEach(makeDraggable);
 
   // Today's date variable
   const dateElement = document.getElementById('current-date');
