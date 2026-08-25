@@ -65,15 +65,16 @@
         user-select: none;
       }
 
+      .other-btns[href] {
+        display: inline-block;
+        text-decoration: none;
+        pointer-events: auto;
+      }
+
       .center-btn:active, .other-btns:active { cursor: grabbing; } /* allows buttons to be moved around */
 
       .center-btn, .other-btns {
         transform-origin: center;
-      }
-
-      .other-btns[href] {
-        cursor: pointer;
-        text-decoration: none;
       }
 
       .center-btn { transform: translate(-50%, -50%); }
@@ -84,7 +85,7 @@
   </head>
   <body>
     <div class="other-btns-list">
-      <a href="https://soundcloud.com/generouscarpenter" target="_blank" rel="noopener noreferrer" class="other-btns" style="position: fixed; margin: 0; left: 38.5358%; top: 18.6382%; display: inline-block; text-decoration: none;">music</a>
+      <a href="https://soundcloud.com/generouscarpenter" target="_blank" rel="noopener noreferrer" class="other-btns" style="position: fixed; margin: 0; left: 38.5358%; top: 18.6382%;">music</a>
       <button class="other-btns" style="position: fixed; margin: 0; left: 29.975%; top: 40.4844%;">circuits</button>
       <button class="other-btns" style="position: fixed; margin: 0; left: 42.8758%; top: 69.1607%;">shows</button>
       <button class="other-btns" style="position: fixed; margin: 0; left: 34.0628%; top: 61.9462%;">images</button>
@@ -116,7 +117,7 @@
       if (footer) wrapLetters(footer);
       
       function makeDraggable(el) {
-        if (el.tagName === "A" && el.href) return;
+        if (el.tagName === "A" || el.closest("a")) return;
 
         let dx = 0, dy = 0, dragging = false;
 
@@ -166,7 +167,7 @@
       }
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
-      document.querySelectorAll(".other-btns").forEach(makeDraggable);
+      document.querySelectorAll(".other-btns:not(a)").forEach(makeDraggable);
 
   // Today's date variable
   const dateElement = document.getElementById('current-date');
