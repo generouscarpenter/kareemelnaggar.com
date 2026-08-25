@@ -71,6 +71,11 @@
         transform-origin: center;
       }
 
+      .other-btns[href] {
+        cursor: pointer;
+        text-decoration: none;
+      }
+
       .center-btn { transform: translate(-50%, -50%); }
       .center-btn:hover { transform: translate(-50%, -50%) scale(1.1); } /* enlarges from the center */
       .other-btns:hover { transform: scale(1.1); } /* enlarges from the center */
@@ -111,6 +116,8 @@
       if (footer) wrapLetters(footer);
       
       function makeDraggable(el) {
+        if (el.tagName === "A" && el.href) return;
+
         let dx = 0, dy = 0, dragging = false;
 
         el.addEventListener("pointerdown", (e) => {
