@@ -52,11 +52,11 @@
   .site-footer .footer-text span {
     display: inline-block;
     font-size: 1em;
-    transition: font-size 0.18s ease 0.35s;
+    transition: font-size 0.18s ease 0.35;
   }
 
   .site-footer .footer-text span:hover {
-    font-size: 1.8em;
-    transition: font-size 0.18s ease 0s;
+    font-size: 2.25em;
+    transition: font-size 1s ease 0s;
   }
 
