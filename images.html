@@ -21,6 +21,16 @@
         box-sizing: border-box;
       }
 
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: url("images/imagesbg.gif") center / cover no-repeat;
+        opacity: 0.2;
+        pointer-events: none;
+        z-index: -1;
+      }
+
       .single-link-wrap {
         position: relative;
         width: 100%;
@@ -46,6 +56,7 @@
         user-select: none;
         touch-action: none;
         text-decoration: none;
+        transform: translate(-50%, -50%);
       }
 
       .single-link:active {
@@ -53,7 +64,7 @@
       }
 
       .single-link:hover {
-        transform: scale(1.05);
+        transform: translate(-50%, -50%) scale(1.05);
       }
 
     </style>
@@ -113,16 +124,17 @@
         dragging = false;
         activePointerId = e.pointerId;
 
-        if (singleLink.style.position !== "fixed") {
-          singleLink.style.position = "fixed";
-          singleLink.style.margin = "0";
-          singleLink.style.left = (rect.left / window.innerWidth) * 100 + "%";
-          singleLink.style.top = (rect.top / window.innerHeight) * 100 + "%";
-          singleLink.style.transform = "none";
-        }
+        singleLink.style.position = "fixed";
+        singleLink.style.margin = "0";
+        singleLink.style.transform = "none";
 
-        dx = e.clientX - rect.left;
-        dy = e.clientY - rect.top;
+        const plainRect = singleLink.getBoundingClientRect();
+        singleLink.style.left = rect.left + (rect.width - plainRect.width) / 2 + "px";
+        singleLink.style.top = rect.top + (rect.height - plainRect.height) / 2 + "px";
+
+        const positionedRect = singleLink.getBoundingClientRect();
+        dx = e.clientX - positionedRect.left;
+        dy = e.clientY - positionedRect.top;
         singleLink.setPointerCapture(e.pointerId);
       });
 

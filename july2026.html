@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>july 2026</title>
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f5f5f5;
+      }
+
+      .gallery {
+        position: relative;
+        width: 100vw;
+        min-height: 100vh;
+      }
+
+      .gallery-footer {
+        position: static;
+        width: 100%;
+        padding: 20px 0 24px;
+        box-sizing: border-box;
+      }
+
+      .gallery img {
+        position: absolute;
+        object-fit: cover;
+        cursor: grab;
+        display: block;
+        border: 1px solid black;
+        background: rgba(237, 237, 237, 0.6);
+        touch-action: none;
+        user-select: none;
+      }
+
+      .spotlight {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5vh 5vw;
+        box-sizing: border-box;
+        background: rgba(0, 0, 0, 0.72);
+        cursor: zoom-out;
+      }
+
+      .spotlight[hidden] {
+        display: none;
+      }
+
+      .spotlight img {
+        max-width: 96vw;
+        max-height: 94vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border: 1px solid black;
+        cursor: default;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="gallery" id="gallery"></div>
+
+    <footer class="site-footer gallery-footer">
+      <table class="footer-table">
+        <tr>
+          <td>
+            <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
+          </td>
+        </tr>
+      </table>
+    </footer>
+
+    <script>
+      function wrapLetters(element) {
+        const text = element.textContent;
+        element.textContent = "";
+        [...text].forEach((char) => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          element.appendChild(span);
+        });
+      }
+
+      const footer = document.querySelector(".footer-text");
+      footer.textContent = `kareem el naggar ${new Date().getFullYear()}`;
+      wrapLetters(footer);
+
+      const imageFiles = [
+        "images/july2026/DSC00126.png",
+        "images/july2026/DSC00129.png",
+        "images/july2026/DSC00135.png",
+        "images/july2026/IMG_8825.png",
+        "images/july2026/IMG_8946.png",
+        "images/july2026/IMG_9075.png",
+        "images/july2026/IMG_9177.png",
+        "images/july2026/IMG_9199.png",
+        "images/july2026/IMG_9228.png",
+        "images/july2026/IMG_9240.png",
+        "images/july2026/IMG_9361.png",
+        "images/july2026/IMG_9393.png",
+        "images/july2026/IMG_9456.png",
+        "images/july2026/IMG_9515.png"
+      ];
+
+      const gallery = document.getElementById("gallery");
+      const spotlight = document.createElement("div");
+      spotlight.className = "spotlight";
+      spotlight.hidden = true;
+      spotlight.setAttribute("aria-label", "Close enlarged photo");
+      const spotlightImage = document.createElement("img");
+      spotlight.appendChild(spotlightImage);
+      document.body.appendChild(spotlight);
+
+      const imgs = imageFiles.map((src) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.draggable = false;
+        gallery.appendChild(img);
+        return img;
+      });
+
+      function layoutGallery() {
+        const padding = 40;
+        const gap = 18;
+        const maxCols = 3;
+        const minWidth = 220;
+        const available = Math.max(200, window.innerWidth - padding * 2);
+        const cols = Math.max(1, Math.min(maxCols, Math.floor((available + gap) / (minWidth + gap))));
+        const baseWidth = Math.max(120, Math.min(420, (available - gap * (cols - 1)) / cols));
+        const baseHeight = baseWidth * 0.75;
+        const rowGap = 20;
+        const gridWidth = cols * baseWidth + (cols - 1) * gap;
+        const startX = (window.innerWidth - gridWidth) / 2;
+        const startY = 20;
+
+        imgs.forEach((img, i) => {
+          const row = Math.floor(i / cols);
+          const col = i % cols;
+          img.style.width = baseWidth + "px";
+          img.style.height = baseHeight + "px";
+          img.style.left = startX + col * (baseWidth + gap) + "px";
+          img.style.top = startY + row * (baseHeight + rowGap) + "px";
+        });
+
+        gallery.style.minHeight = startY + Math.ceil(imgs.length / cols) * (baseHeight + rowGap) + 20 + "px";
+      }
+
+      imgs.forEach((img) => {
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDown = false;
+        let hasDragged = false;
+        let startX = 0;
+        let startY = 0;
+        let activePointerId = null;
+
+        img.addEventListener("dragstart", (e) => e.preventDefault());
+
+        img.addEventListener("pointerdown", (e) => {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+
+          const rect = img.getBoundingClientRect();
+          startX = e.clientX;
+          startY = e.clientY;
+          isDown = true;
+          hasDragged = false;
+          activePointerId = e.pointerId;
+          offsetX = e.clientX - rect.left;
+          offsetY = e.clientY - rect.top;
+          img.style.cursor = "grabbing";
+          img.style.zIndex = 10;
+          img.setPointerCapture(e.pointerId);
+        });
+
+        img.addEventListener("pointermove", (e) => {
+          if (!isDown || activePointerId !== e.pointerId) return;
+          if (!hasDragged && Math.hypot(e.clientX - startX, e.clientY - startY) > 8) {
+            hasDragged = true;
+          }
+          if (!hasDragged) return;
+          const galleryRect = gallery.getBoundingClientRect();
+          img.style.left = e.clientX - galleryRect.left - offsetX + "px";
+          img.style.top = e.clientY - galleryRect.top - offsetY + "px";
+        });
+
+        img.addEventListener("pointerup", (e) => {
+          if (activePointerId !== e.pointerId) return;
+          isDown = false;
+          activePointerId = null;
+          img.style.cursor = "grab";
+          img.style.zIndex = 1;
+          img.releasePointerCapture(e.pointerId);
+        });
+
+        img.addEventListener("click", (e) => {
+          if (hasDragged) {
+            e.preventDefault();
+            e.stopPropagation();
+            hasDragged = false;
+            return;
+          }
+          spotlightImage.src = img.src;
+          spotlight.hidden = false;
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      spotlight.addEventListener("click", (e) => {
+        if (e.target !== spotlightImage) {
+          spotlight.hidden = true;
+          document.body.style.overflow = "";
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          spotlight.hidden = true;
+          document.body.style.overflow = "";
+        }
+      });
+
+      layoutGallery();
+      window.addEventListener("resize", layoutGallery);
+    </script>
+  </body>
+</html>
