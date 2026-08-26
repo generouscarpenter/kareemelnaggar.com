@@ -117,12 +117,24 @@
       if (footer) wrapLetters(footer);
       
       function makeDraggable(el) {
-        if (el.tagName === "A" || el.closest("a")) return;
-
         let dx = 0, dy = 0, dragging = false;
+        let hasDragged = false;
+        let startX = 0, startY = 0;
+        const dragThreshold = 8;
+
+        el.addEventListener("click", (e) => {
+          if (hasDragged) {
+            e.preventDefault();
+            e.stopPropagation();
+            hasDragged = false;
+          }
+        });
 
         el.addEventListener("pointerdown", (e) => {
           const rect = el.getBoundingClientRect();
+          startX = e.clientX;
+          startY = e.clientY;
+          hasDragged = false;
 
           if (el.classList.contains("center-btn")) {
             dx = e.clientX - (rect.left + rect.width / 2);
@@ -150,6 +162,14 @@
         });
 
         el.addEventListener("pointermove", (e) => {
+          if (!dragging) {
+            const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
+            if (distance > dragThreshold) {
+              dragging = true;
+              hasDragged = true;
+            }
+          }
+
           if (!dragging) return;
           if (el.classList.contains("center-btn")) {
             el.style.left = ((e.clientX - dx) / window.innerWidth) * 100 + "%";
@@ -162,12 +182,15 @@
 
         el.addEventListener("pointerup", (e) => {
           dragging = false;
+          if (hasDragged) {
+            e.preventDefault();
+          }
           el.releasePointerCapture(e.pointerId);
         });
       }
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
-      document.querySelectorAll(".other-btns:not(a)").forEach(makeDraggable);
+      document.querySelectorAll(".other-btns").forEach(makeDraggable);
 
   // Today's date variable
   const dateElement = document.getElementById('current-date');
