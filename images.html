@@ -104,19 +104,24 @@
 
       singleLink.addEventListener("pointerdown", (e) => {
         if (e.pointerType === "mouse" && e.button !== 0) return;
+
         const rect = singleLink.getBoundingClientRect();
         startX = e.clientX;
         startY = e.clientY;
         hasDragged = false;
         dragging = false;
         activePointerId = e.pointerId;
+
+        // keep the element anchored under the pointer instead of offset from the top-left corner
         dx = e.clientX - rect.left;
         dy = e.clientY - rect.top;
+
         singleLink.setPointerCapture(e.pointerId);
       });
 
       singleLink.addEventListener("pointermove", (e) => {
         if (activePointerId !== e.pointerId) return;
+
         const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
         if (!dragging && distance > dragThreshold) {
           dragging = true;
@@ -125,8 +130,8 @@
 
         if (!dragging) return;
 
-        const left = ((e.clientX - dx) / window.innerWidth) * 100;
-        const top = ((e.clientY - dy) / window.innerHeight) * 100;
+        const left = (e.clientX - dx) / window.innerWidth * 100;
+        const top = (e.clientY - dy) / window.innerHeight * 100;
         singleLink.style.left = left + "%";
         singleLink.style.top = top + "%";
       });
