@@ -23,3 +23,36 @@
   font-family: "microsoftsansserif", Arial, sans-serif;
   }
 
+  .site-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    font-family: "microsoftsansserif", Arial, sans-serif;
+    font-size: 18px;
+    color: black;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .site-footer .footer-text {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1.25px solid black;
+    background: rgba(237, 237, 237, 0.6);
+    line-height: 1.2;
+  }
+
+  .site-footer .footer-text span {
+    display: inline-block;
+    transition: transform 0.12s ease;
+  }
+
+  .site-footer .footer-text span:hover {
+    transform: scale(1.25);
+  }
+

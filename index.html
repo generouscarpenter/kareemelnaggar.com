@@ -102,21 +102,7 @@
     </main>
 
 
-    <!-- ---------- PER-LETTER SCRIPT ---------- -->
     <script>
-      function wrapLetters(element) {
-        const text = element.textContent;
-        element.textContent = "";
-        [...text].forEach(char => {
-          const span = document.createElement("span");
-          span.textContent = char === " " ? "\u00A0" : char;
-          element.appendChild(span);
-        });
-      }
-      document.querySelectorAll(".topnav a").forEach(wrapLetters);
-      const footer = document.querySelector(".footer");
-      if (footer) wrapLetters(footer);
-      
       function makeDraggable(el) {
         let dx = 0, dy = 0, dragging = false;
         let hasDragged = false;
