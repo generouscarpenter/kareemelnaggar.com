@@ -72,25 +72,23 @@
     </div>
 
     <footer class="site-footer">
-      <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">
-        <span id="footer-name"></span>
-        <span id="current-year"></span>
-      </a>
+      <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
     </footer>
 
     <script>
-      const year = new Date().getFullYear();
-      const name = "kareem el naggar ";
-      const nameSpan = document.getElementById("footer-name");
+      function wrapLetters(element) {
+        const text = element.textContent;
+        element.textContent = "";
+        [...text].forEach(char => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          element.appendChild(span);
+        });
+      }
 
-      nameSpan.innerHTML = "";
-      [...name].forEach(char => {
-        const span = document.createElement("span");
-        span.textContent = char === " " ? "\u00A0" : char;
-        nameSpan.appendChild(span);
-      });
-
-      document.getElementById("current-year").textContent = year;
+      const footer = document.querySelector(".footer-text");
+      footer.textContent = `kareem el naggar ${new Date().getFullYear()}`;
+      wrapLetters(footer);
     </script>
   </body>
 </html>
