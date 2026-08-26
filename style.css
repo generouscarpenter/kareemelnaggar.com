@@ -42,10 +42,12 @@
   .footer-table {
     border-collapse: collapse;
     margin: 0 auto;
+    border: 1.25px solid black;
   }
 
   .footer-table td {
-    padding: 0;
+    padding: 4px 8px;
+    border: 1.25px solid black;
   }
 
   .site-footer .footer-text {
