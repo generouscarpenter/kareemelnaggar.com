@@ -19,11 +19,20 @@
         min-height: 100vh;
       }
 
-      .gallery-footer {
-        position: static;
+      .gallery-footer-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
         width: 100%;
         padding: 20px 0 24px;
         box-sizing: border-box;
+      }
+
+      .gallery-footer {
+        position: static;
+        width: auto;
+        padding: 0;
       }
 
       .gallery img {
@@ -69,15 +78,27 @@
   <body>
     <div class="gallery" id="gallery"></div>
 
-    <footer class="site-footer gallery-footer">
-      <table class="footer-table">
-        <tr>
-          <td>
-            <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
-          </td>
-        </tr>
-      </table>
-    </footer>
+    <div class="gallery-footer-row">
+      <footer class="site-footer gallery-footer">
+        <table class="footer-table">
+          <tr>
+            <td>
+              <a href="images.html" class="footer-text">&lt;-- back</a>
+            </td>
+          </tr>
+        </table>
+      </footer>
+
+      <footer class="site-footer gallery-footer">
+        <table class="footer-table">
+          <tr>
+            <td>
+              <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
+            </td>
+          </tr>
+        </table>
+      </footer>
+    </div>
 
     <script>
       function wrapLetters(element) {
@@ -90,9 +111,9 @@
         });
       }
 
-      const footer = document.querySelector(".footer-text");
-      footer.textContent = `kareem el naggar ${new Date().getFullYear()}`;
-      wrapLetters(footer);
+      const footerTexts = document.querySelectorAll(".footer-text");
+      footerTexts[1].textContent = `kareem el naggar ${new Date().getFullYear()}`;
+      footerTexts.forEach(wrapLetters);
 
       const imageFiles = [
         "images/july2026/DSC00126.png",
