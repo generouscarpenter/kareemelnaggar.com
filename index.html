@@ -16,6 +16,16 @@
         overscroll-behavior: none;
       }
 
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: url("images/webbgdither.gif") center / cover no-repeat;
+        opacity: 0.2;
+        pointer-events: none;
+        z-index: -1;
+      }
+
       /* ---------- CENTER CONTENT ---------- */
       main {
         pointer-events: none;
