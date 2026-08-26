@@ -21,22 +21,19 @@
         box-sizing: border-box;
       }
 
-      .gallery-wrap {
-        width: min(900px, 100%);
-      }
-
-      .gallery-list {
+      .single-link-wrap {
+        position: relative;
+        width: 100%;
         display: flex;
-        flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        gap: 12px 16px;
-        margin: 0;
-        padding: 0;
       }
 
-      .gallery-button {
-        appearance: none;
+      .single-link {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
         font-family: "microsoftsansserif", Arial, sans-serif;
         font-size: 30px;
         line-height: 1.2;
@@ -45,37 +42,32 @@
         background: rgba(237, 237, 237, 0.6);
         color: black;
         white-space: nowrap;
-        cursor: pointer;
-        transition: transform 0.1s ease;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+        text-decoration: none;
       }
 
-      .gallery-button:hover {
-        transform: scale(1.05);
+      .single-link:active {
+        cursor: grabbing;
+      }
+
+      .single-link:hover {
+        transform: translate(-50%, -50%) scale(1.05);
       }
 
     </style>
   </head>
   <body>
-    <div class="gallery-wrap">
-      <div class="gallery-list">
-        <button class="gallery-button">one</button>
-        <button class="gallery-button">two</button>
-        <button class="gallery-button">three</button>
-        <button class="gallery-button">four</button>
-        <button class="gallery-button">five</button>
-        <button class="gallery-button">six</button>
-        <button class="gallery-button">seven</button>
-        <button class="gallery-button">eight</button>
-        <button class="gallery-button">nine</button>
-        <button class="gallery-button">ten</button>
-      </div>
+    <div class="single-link-wrap">
+      <a href="july2026.html" class="single-link" draggable="false">July2026</a>
     </div>
 
     <footer class="site-footer">
       <table class="footer-table">
         <tr>
           <td>
-            <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
+            <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">Kareem El Naggar 2026</a>
           </td>
         </tr>
       </table>
@@ -95,6 +87,56 @@
       const footer = document.querySelector(".footer-text");
       footer.textContent = `kareem el naggar ${new Date().getFullYear()}`;
       wrapLetters(footer);
+
+      const singleLink = document.querySelector(".single-link");
+      let dx = 0, dy = 0, dragging = false, hasDragged = false;
+      let startX = 0, startY = 0, activePointerId = null;
+      const dragThreshold = 8;
+
+      singleLink.addEventListener("dragstart", (e) => e.preventDefault());
+      singleLink.addEventListener("click", (e) => {
+        if (hasDragged) {
+          e.preventDefault();
+          e.stopPropagation();
+          hasDragged = false;
+        }
+      });
+
+      singleLink.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        const rect = singleLink.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        hasDragged = false;
+        dragging = false;
+        activePointerId = e.pointerId;
+        dx = e.clientX - rect.left;
+        dy = e.clientY - rect.top;
+        singleLink.setPointerCapture(e.pointerId);
+      });
+
+      singleLink.addEventListener("pointermove", (e) => {
+        if (activePointerId !== e.pointerId) return;
+        const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
+        if (!dragging && distance > dragThreshold) {
+          dragging = true;
+          hasDragged = true;
+        }
+
+        if (!dragging) return;
+
+        const left = ((e.clientX - dx) / window.innerWidth) * 100;
+        const top = ((e.clientY - dy) / window.innerHeight) * 100;
+        singleLink.style.left = left + "%";
+        singleLink.style.top = top + "%";
+      });
+
+      singleLink.addEventListener("pointerup", (e) => {
+        if (activePointerId !== e.pointerId) return;
+        dragging = false;
+        activePointerId = null;
+        singleLink.releasePointerCapture(e.pointerId);
+      });
     </script>
   </body>
 </html>
