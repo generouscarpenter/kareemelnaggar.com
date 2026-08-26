@@ -120,6 +120,7 @@
         let dx = 0, dy = 0, dragging = false;
         let hasDragged = false;
         let startX = 0, startY = 0;
+        let activePointerId = null;
         const dragThreshold = 8;
 
         el.addEventListener("click", (e) => {
@@ -131,43 +132,42 @@
         });
 
         el.addEventListener("pointerdown", (e) => {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+
           const rect = el.getBoundingClientRect();
           startX = e.clientX;
           startY = e.clientY;
           hasDragged = false;
+          dragging = false;
+          activePointerId = e.pointerId;
 
           if (el.classList.contains("center-btn")) {
             dx = e.clientX - (rect.left + rect.width / 2);
             dy = e.clientY - (rect.top + rect.height / 2);
-            dragging = true;
-            el.setPointerCapture(e.pointerId);
-            return;
-          }
+          } else {
+            // On first grab, break it out of flex layout and pin it in place
+            if (el.style.position !== "fixed") {
+              el.style.position = "fixed";
+              el.style.margin = "0";
+              el.style.left = (rect.left / window.innerWidth) * 100 + "%";
+              el.style.top = (rect.top / window.innerHeight) * 100 + "%";
+              el.style.transform = "none";
+            }
 
-          // On first grab, break it out of flex layout and pin it in place
-          if (el.style.position !== "fixed") {
-            el.style.position = "fixed";
-            el.style.margin = "0";
-            el.style.left = (rect.left / window.innerWidth) * 100 + "%";
-            el.style.top = (rect.top / window.innerHeight) * 100 + "%";
-            el.style.transform = "none";
+            dx = e.clientX - rect.left;
+            dy = e.clientY - rect.top;
           }
-
-          // offset between the pointer and the button's top-left corner
-          dx = e.clientX - rect.left;
-          dy = e.clientY - rect.top;
-          dragging = true;
 
           el.setPointerCapture(e.pointerId); // keep tracking even if pointer leaves the button
         });
 
         el.addEventListener("pointermove", (e) => {
-          if (!dragging) {
-            const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
-            if (distance > dragThreshold) {
-              dragging = true;
-              hasDragged = true;
-            }
+          if (activePointerId !== e.pointerId) return;
+
+          const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
+          if (!dragging && distance > dragThreshold) {
+            dragging = true;
+            hasDragged = true;
           }
 
           if (!dragging) return;
@@ -181,10 +181,10 @@
         });
 
         el.addEventListener("pointerup", (e) => {
+          if (activePointerId !== e.pointerId) return;
+
           dragging = false;
-          if (hasDragged) {
-            e.preventDefault();
-          }
+          activePointerId = null;
           el.releasePointerCapture(e.pointerId);
         });
       }
