@@ -63,12 +63,14 @@
         cursor: grab;
         touch-action: none;      /* stops touch from scrolling while dragging */
         user-select: none;
+        -webkit-user-select: none;
       }
 
       .other-btns[href] {
         display: inline-block;
         text-decoration: none;
         pointer-events: auto;
+        draggable: false;
       }
 
       .center-btn:active, .other-btns:active { cursor: grabbing; } /* allows buttons to be moved around */
@@ -85,7 +87,7 @@
   </head>
   <body>
     <div class="other-btns-list">
-      <a href="https://soundcloud.com/generouscarpenter" target="_blank" rel="noopener noreferrer" class="other-btns" style="position: fixed; margin: 0; left: 38.5358%; top: 18.6382%;">music</a>
+      <a href="https://soundcloud.com/generouscarpenter" target="_blank" rel="noopener noreferrer" draggable="false" class="other-btns" style="position: fixed; margin: 0; left: 38.5358%; top: 18.6382%;">music</a>
       <button class="other-btns" style="position: fixed; margin: 0; left: 29.975%; top: 40.4844%;">circuits</button>
       <button class="other-btns" style="position: fixed; margin: 0; left: 42.8758%; top: 69.1607%;">shows</button>
       <button class="other-btns" style="position: fixed; margin: 0; left: 34.0628%; top: 61.9462%;">images</button>
@@ -122,6 +124,8 @@
         let startX = 0, startY = 0;
         let activePointerId = null;
         const dragThreshold = 8;
+
+        el.addEventListener("dragstart", (e) => e.preventDefault());
 
         el.addEventListener("click", (e) => {
           if (hasDragged) {
