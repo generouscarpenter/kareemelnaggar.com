@@ -39,6 +39,15 @@
     line-height: 1.2;
   }
 
+  .footer-table {
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+
+  .footer-table td {
+    padding: 0;
+  }
+
   .site-footer .footer-text {
     display: inline-block;
     color: black;
