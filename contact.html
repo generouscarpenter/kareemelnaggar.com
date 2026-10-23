@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>contact</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+      html, body {
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 20px;
+        box-sizing: border-box;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: url("images/contactbg.gif") center / cover no-repeat;
+        opacity: 0.2;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .contact-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        max-width: calc(100vw - 48px);
+        transform: translate(-50%, -50%);
+      }
+
+      .contact-link {
+        font-family: "microsoftsansserif", Arial, sans-serif;
+        font-size: 30px;
+        line-height: 1.2;
+        padding: 6px 12px;
+        border: 1.25px solid black;
+        background: rgba(237, 237, 237, 0.6);
+        color: black;
+        max-width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .contact-link:hover {
+        transform: scale(1.05);
+      }
+
+      .copy-status {
+        margin: 0;
+        max-width: 100%;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="contact-content">
+      <a
+        href="mailto:kareem_el_naggar@brown.edu"
+        rel="noopener noreferrer"
+        class="contact-link"
+        id="contact-link"
+      >kareem_el_naggar@brown.edu</a>
+      <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+    </div>
+
+    <footer class="site-footer">
+      <table class="footer-table">
+        <tr>
+          <td>
+            <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
+          </td>
+        </tr>
+      </table>
+    </footer>
+
+    <script>
+      function wrapLetters(element) {
+        const text = element.textContent;
+        element.textContent = "";
+        [...text].forEach(char => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          element.appendChild(span);
+        });
+      }
+
+      const footer = document.querySelector(".footer-text");
+      footer.textContent = `kareem el naggar ${new Date().getFullYear()}`;
+      wrapLetters(footer);
+
+      const contactLink = document.getElementById("contact-link");
+      const copyStatus = document.getElementById("copy-status");
+      const email = "kareem_el_naggar@brown.edu";
+
+      contactLink.addEventListener("click", () => {
+        if (!navigator.clipboard?.writeText) {
+          copyStatus.textContent = "Clipboard access is unavailable. Please copy the email manually.";
+          return;
+        }
+
+        navigator.clipboard.writeText(email).then(() => {
+          copyStatus.textContent = "[email copied to clipboard]";
+        }).catch(() => {
+          copyStatus.textContent = "Could not copy email. Please copy it manually.";
+        });
+      });
+    </script>
+  </body>
+</html>

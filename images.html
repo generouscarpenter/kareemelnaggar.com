@@ -60,6 +60,7 @@
         touch-action: none;
         text-decoration: none;
         pointer-events: auto;
+        transform: translate(var(--drag-x, 0px), var(--drag-y, 0px));
       }
 
       .single-link:active {
@@ -67,15 +68,15 @@
       }
 
       .single-link:hover {
-        transform: scale(1.05);
+        transform: translate(var(--drag-x, 0px), var(--drag-y, 0px)) scale(1.05);
       }
 
     </style>
   </head>
   <body>
     <div class="single-link-wrap">
-      <a href="montrealoct2026.html" class="single-link" draggable="false">montreal october 2026</a>
-      <a href="newjerseyoct2026.html" class="single-link" draggable="false">new jersey october 2026</a>
+      <a href="montrealoct2026.html" class="single-link" draggable="false">montreal</a>
+      <a href="newjerseyoct2026.html" class="single-link" draggable="false">new jersey</a>
       <a href="july2026.html" class="single-link" draggable="false">july 2026</a>
     </div>
 
@@ -105,7 +106,8 @@
       wrapLetters(footer);
 
       document.querySelectorAll(".single-link").forEach((singleLink) => {
-        let dx = 0, dy = 0, dragging = false, hasDragged = false;
+        let offsetX = 0, offsetY = 0, startOffsetX = 0, startOffsetY = 0;
+        let dragging = false, hasDragged = false;
         let startX = 0, startY = 0, activePointerId = null;
         const dragThreshold = 8;
 
@@ -122,24 +124,13 @@
         singleLink.addEventListener("pointerdown", (e) => {
           if (e.pointerType === "mouse" && e.button !== 0) return;
 
-          const rect = singleLink.getBoundingClientRect();
           startX = e.clientX;
           startY = e.clientY;
+          startOffsetX = offsetX;
+          startOffsetY = offsetY;
           hasDragged = false;
           dragging = false;
           activePointerId = e.pointerId;
-
-          singleLink.style.position = "fixed";
-          singleLink.style.margin = "0";
-          singleLink.style.transform = "none";
-
-          const plainRect = singleLink.getBoundingClientRect();
-          singleLink.style.left = rect.left + (rect.width - plainRect.width) / 2 + "px";
-          singleLink.style.top = rect.top + (rect.height - plainRect.height) / 2 + "px";
-
-          const positionedRect = singleLink.getBoundingClientRect();
-          dx = e.clientX - positionedRect.left;
-          dy = e.clientY - positionedRect.top;
           singleLink.setPointerCapture(e.pointerId);
         });
 
@@ -154,8 +145,10 @@
 
           if (!dragging) return;
 
-          singleLink.style.left = ((e.clientX - dx) / window.innerWidth) * 100 + "%";
-          singleLink.style.top = ((e.clientY - dy) / window.innerHeight) * 100 + "%";
+          offsetX = startOffsetX + e.clientX - startX;
+          offsetY = startOffsetY + e.clientY - startY;
+          singleLink.style.setProperty("--drag-x", offsetX + "px");
+          singleLink.style.setProperty("--drag-y", offsetY + "px");
         });
 
         singleLink.addEventListener("pointerup", (e) => {

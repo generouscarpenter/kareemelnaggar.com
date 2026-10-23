@@ -96,14 +96,13 @@
   </head>
   <body>
     <div class="other-btns-list">
-      <a href="https://soundcloud.com/generouscarpenter" target="_blank" rel="noopener noreferrer" draggable="false" class="other-btns" style="position: fixed; margin: 0; left: 38.5358%; top: 18.6382%;">music</a>
-      <button class="other-btns" style="position: fixed; margin: 0; left: 29.975%; top: 40.4844%;">circuits</button>
-      <button class="other-btns" style="position: fixed; margin: 0; left: 42.8758%; top: 69.1607%;">shows</button>
-      <a href="images.html" draggable="false" class="other-btns" style="position: fixed; margin: 0; left: 34.0628%; top: 61.9462%;">images+</a>
-      <button class="other-btns" style="position: fixed; margin: 0; left: 46.3253%; top: 33.7186%;">engineering projects</button>
-      <button class="other-btns" style="position: fixed; margin: 0; left: 65.0779%; top: 27.1905%;">video+</button>
-      <button class="other-btns" style="position: fixed; margin: 0; left: 58.8945%; top: 54.6359%;">about</button>
-      <a href="mailto:kareem_el_naggar@brown.edu" draggable="false" class="other-btns" style="position: fixed; margin: 0; left: 60.988%; top: 76.8329%;">contact</a>
+      <a href="https://soundcloud.com/generouscarpenter" target="_blank" rel="noopener noreferrer" draggable="false" class="other-btns" style="position: fixed; margin: 0; left: 35.6429%; top: 59.8485%;">music</a>
+      <button class="other-btns" style="position: fixed; margin: 0; left: 55.0826%; top: 30.6818%;">shows</button>
+      <a href="images.html" draggable="false" class="other-btns" style="position: fixed; margin: 0; left: 53.4943%; top: 66.5404%;">images+</a>
+      <button class="other-btns" style="position: fixed; margin: 0; left: 31.0673%; top: 39.1414%;">engineering projects</button>
+      <button class="other-btns" style="position: fixed; margin: 0; left: 40.4701%; top: 23.3586%;">video+</button>
+      <button class="other-btns" style="position: fixed; margin: 0; left: 57.2427%; top: 53.6616%;">about</button>
+      <a href="contact.html" draggable="false" class="other-btns" id="contact-link" style="position: fixed; margin: 0; left: 62.5794%; top: 74.2424%;">contact</a>
     </div>
 
     <!-- centered button -->
@@ -190,6 +189,16 @@
 
       document.querySelectorAll(".center-btn").forEach(makeDraggable);
       document.querySelectorAll(".other-btns").forEach(makeDraggable);
+
+  const contactLink = document.getElementById("contact-link");
+  const mobilePointer = window.matchMedia("(pointer: coarse)");
+  const updateContactLink = () => {
+    contactLink.href = mobilePointer.matches
+      ? "mailto:kareem_el_naggar@brown.edu"
+      : "contact.html";
+  };
+  updateContactLink();
+  mobilePointer.addEventListener("change", updateContactLink);
 
   // Today's date variable
   const dateElement = document.getElementById('current-date');
