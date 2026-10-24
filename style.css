@@ -23,6 +23,20 @@
   font-family: "microsoftsansserif", Arial, sans-serif;
   }
 
+  .site-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px 0 0;
+    font-family: "microsoftsansserif", Arial, sans-serif;
+    font-size: 18px;
+    color: black;
+    text-align: center;
+    line-height: 1.2;
+  }
+
   .site-footer {
     position: fixed;
     left: 0;
@@ -50,6 +64,7 @@
     border: 1.25px solid black;
   }
 
+  .site-header .footer-text,
   .site-footer .footer-text {
     display: inline-block;
     color: black;
@@ -60,14 +75,15 @@
     padding: 0;
   }
 
+  .site-header .footer-text span,
   .site-footer .footer-text span {
     display: inline-block;
     font-size: 1em;
     transition: font-size 1s ease 1s;
   }
 
+  .site-header .footer-text span:hover,
   .site-footer .footer-text span:hover {
     font-size: 2.25em;
     transition: font-size 0.2s ease 0s;
   }
-
