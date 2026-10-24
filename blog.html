@@ -18,15 +18,31 @@
       }
 
       .blog-entry {
+        position: relative;
         width: 80%;
-        margin: 0 0 36px var(--entry-left, 0%);
+        margin: 0 auto 36px;
+        left: var(--entry-left, 0%);
         text-align: var(--entry-align, left);
       }
 
-      .blog-entry h2 {
+      .blog-entry summary {
         margin: 0 0 12px;
         font-size: 24px;
         font-weight: normal;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .blog-entry summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .blog-entry summary::before {
+        content: "+ ";
+      }
+
+      .blog-entry[open] summary::before {
+        content: "− ";
       }
 
       .blog-entry p {
@@ -46,20 +62,37 @@
   </head>
   <body>
     <main class="blog-content">
-      <article class="blog-entry" style="--entry-left: 15%; --entry-align: center;">
-        <h2><time>october 24, 2026</time></h2>
-        <p>for the start of this blog i will align my paragraph to the center as this feels like a Title or like start of something. I'll add entries to this page every so often with updates or just if i have something to say. I'm trying to make this website sort of my replacement for social media and stuff because everytime I post something on instagram or something it feels like i'm yelling "LOOK AT ME!!!!" to everyone i know, whereas with this I get to just put whatever i want on here and whoever wants to see it can visit / check in as they please. wait let me figure out how to embed videos. Ok there for example maybe i'll put something i've been watching, like this live performance of they cannot let it expand by this band called Midlake that I liked a few years ago and forgot about until recently:</p>
-        <iframe
-          class="blog-video"
-          src="https://youtu.be/Eb2FU-0Zt0Y?si=cnGXWhgY4K8sYG9_"
-          title="they cannot let it expand"
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-        ></iframe>
-        <p> Um so yeah okay you get the point i'll come back when i have something more substantive to say.</p>
-      </article>
+
+      <details class="blog-entry" style="--entry-left: -40%; --entry-align: left;">
+        <summary>october 24.411275, 2026</summary>
+        <div class="blog-entry-content">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/5ikPDUTMtLg?si=RH1xDymL48OJWHBx&amp;start=722" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>        </div>
+      </details>
+
+      <details class="blog-entry" style="--entry-left: 45%; --entry-align: right;">
+        <summary>october 24.2385217, 2026</summary>
+        <div class="blog-entry-content">
+          <p> practicing this entry thing and making sure it works now let me try aligning the text differently ohhhh my god it worked okay awesome</p>
+        </div>
+      </details>
+
+
+      <details class="blog-entry" style="--entry-left: 0%; --entry-align: center;">
+        <summary>october 24, 2026</summary>
+        <div class="blog-entry-content">
+          <p>for the start of this blog i will align my paragraph to the center as this feels like a Title or like start of something. I'll add entries to this page every so often with updates or just if i have something to say. I'm trying to make this website sort of my replacement for social media and stuff because everytime I post something on instagram it feels like i'm yelling "LOOK AT ME!!!!" to everyone i know, whereas with this I get to just put whatever i want on here and whoever wants to see it can visit / check in as they please. wait let me figure out how to embed videos. Ok there for example maybe i'll put something i've been watching, like this live performance of they cannot let it expand by this band called Midlake that I liked a few years ago and forgot about until recently:</p>
+          <iframe
+            class="blog-video"
+            src="https://www.youtube.com/embed/Eb2FU-0Zt0Y"
+            title="they cannot let it expand"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+          <p> Um so yeah okay you get the point i'll come back when i have something more substantive to say. Peace out ☮️.</p>
+        </div>
+      </details>
     </main>
 
     <footer class="site-footer">
