@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>broken camera</title>
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f5f5f5;
+      }
+
+      .gallery {
+        position: relative;
+        width: 100vw;
+        min-height: 100vh;
+      }
+
+      .gallery-footer-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 15px 0 24px;
+        box-sizing: border-box;
+      }
+
+      .gallery-footer {
+        position: static;
+        width: auto;
+        padding: 0;
+      }
+
+      .gallery img {
+        position: absolute;
+        object-fit: cover;
+        cursor: grab;
+        display: block;
+        border: 1px solid black;
+        background: rgba(237, 237, 237, 0.6);
+        touch-action: none;
+        user-select: none;
+      }
+
+      .spotlight {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5vh 5vw;
+        box-sizing: border-box;
+        background: rgba(0, 0, 0, 0.72);
+        cursor: zoom-out;
+      }
+
+      .spotlight[hidden] {
+        display: none;
+      }
+
+      .spotlight img {
+        width: min(90vw, 600px);
+        max-width: 90vw;
+        max-height: 90vh;
+        height: auto;
+        object-fit: contain;
+        border: 1px solid black;
+        cursor: default;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="gallery" id="gallery"></div>
+
+    <div class="gallery-footer-row">
+      <footer class="site-footer gallery-footer">
+        <table class="footer-table">
+          <tr>
+            <td>
+              <a href="images.html" class="footer-text">&lt;-- back</a>
+            </td>
+          </tr>
+        </table>
+      </footer>
+
+      <footer class="site-footer gallery-footer">
+        <table class="footer-table">
+          <tr>
+            <td>
+              <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
+            </td>
+          </tr>
+        </table>
+      </footer>
+    </div>
+
+    <script>
+      function wrapLetters(element) {
+        const text = element.textContent;
+        element.textContent = "";
+        [...text].forEach((char) => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          element.appendChild(span);
+        });
+      }
+
+      const footerTexts = document.querySelectorAll(".footer-text");
+      footerTexts[1].textContent = `kareem el naggar ${new Date().getFullYear()}`;
+      footerTexts.forEach(wrapLetters);
+
+      const imageFiles = [
+        "images/october25/IMG_2112.png",
+        "images/october25/IMG_2114.png"
+      ];
+
+      const gallery = document.getElementById("gallery");
+      const spotlight = document.createElement("div");
+      spotlight.className = "spotlight";
+      spotlight.hidden = true;
+      spotlight.setAttribute("aria-label", "Close enlarged photo");
+      const spotlightImage = document.createElement("img");
+      spotlight.appendChild(spotlightImage);
+      document.body.appendChild(spotlight);
+
+      const imgs = imageFiles.map((src) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.draggable = false;
+        gallery.appendChild(img);
+        return img;
+      });
+
+      function layoutGallery() {
+        const padding = 40;
+        const gap = 18;
+        const maxCols = 3;
+        const minWidth = 220;
+        const available = Math.max(200, window.innerWidth - padding * 2);
+        const cols = Math.max(1, Math.min(maxCols, Math.floor((available + gap) / (minWidth + gap))));
+        const baseWidth = Math.max(120, Math.min(420, (available - gap * (cols - 1)) / cols));
+        const baseHeight = baseWidth * 0.75;
+        const rowGap = 20;
+        const gridWidth = cols * baseWidth + (cols - 1) * gap;
+        const startX = (window.innerWidth - gridWidth) / 2;
+        const startY = 20;
+
+        imgs.forEach((img, i) => {
+          const row = Math.floor(i / cols);
+          const col = i % cols;
+          img.style.width = baseWidth + "px";
+          img.style.height = baseHeight + "px";
+          img.style.left = startX + col * (baseWidth + gap) + "px";
+          img.style.top = startY + row * (baseHeight + rowGap) + "px";
+        });
+
+        gallery.style.minHeight = startY + Math.ceil(imgs.length / cols) * (baseHeight + rowGap) + 20 + "px";
+      }
+
+      imgs.forEach((img) => {
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDown = false;
+        let hasDragged = false;
+        let startX = 0;
+        let startY = 0;
+        let activePointerId = null;
+
+        img.addEventListener("dragstart", (e) => e.preventDefault());
+
+        img.addEventListener("pointerdown", (e) => {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+
+          const rect = img.getBoundingClientRect();
+          startX = e.clientX;
+          startY = e.clientY;
+          isDown = true;
+          hasDragged = false;
+          activePointerId = e.pointerId;
+          offsetX = e.clientX - rect.left;
+          offsetY = e.clientY - rect.top;
+          img.style.cursor = "grabbing";
+          img.style.zIndex = 10;
+          img.setPointerCapture(e.pointerId);
+        });
+
+        img.addEventListener("pointermove", (e) => {
+          if (!isDown || activePointerId !== e.pointerId) return;
+          if (!hasDragged && Math.hypot(e.clientX - startX, e.clientY - startY) > 8) {
+            hasDragged = true;
+          }
+          if (!hasDragged) return;
+          const galleryRect = gallery.getBoundingClientRect();
+          img.style.left = e.clientX - galleryRect.left - offsetX + "px";
+          img.style.top = e.clientY - galleryRect.top - offsetY + "px";
+        });
+
+        img.addEventListener("pointerup", (e) => {
+          if (activePointerId !== e.pointerId) return;
+          isDown = false;
+          activePointerId = null;
+          img.style.cursor = "grab";
+          img.style.zIndex = 1;
+          img.releasePointerCapture(e.pointerId);
+        });
+
+        img.addEventListener("click", (e) => {
+          if (hasDragged) {
+            e.preventDefault();
+            e.stopPropagation();
+            hasDragged = false;
+            return;
+          }
+          spotlightImage.src = img.src;
+          spotlight.hidden = false;
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      spotlight.addEventListener("click", (e) => {
+        if (e.target !== spotlightImage) {
+          spotlight.hidden = true;
+          document.body.style.overflow = "";
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          spotlight.hidden = true;
+          document.body.style.overflow = "";
+        }
+      });
+
+      layoutGallery();
+      window.addEventListener("resize", layoutGallery);
+    </script>
+  </body>
+</html>
