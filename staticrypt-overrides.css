@@ -1,0 +1,119 @@
+@font-face {
+    font-family: "microsoftsansserif";
+    src: url("micross.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.staticrypt-content {
+    min-height: 100%;
+    height: auto;
+    margin: 0;
+    background: #f5f5f5;
+    color: #000;
+    font-family: "microsoftsansserif", Arial, sans-serif;
+}
+
+.staticrypt-content::before {
+    content: "engineering projects";
+    display: block;
+    margin: 32px 12px 0;
+    font-size: 24px;
+    text-align: center;
+}
+
+.staticrypt-page {
+    width: min(90vw, 420px);
+    padding: 0;
+    margin: 22vh auto 0;
+}
+
+.staticrypt-form {
+    max-width: none;
+    margin: 0 auto;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.staticrypt-instructions {
+    margin: 0 0 16px;
+}
+
+.staticrypt-title {
+    margin: 0 0 12px;
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.staticrypt-instructions p:not(.staticrypt-title) {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.staticrypt-hr,
+.staticrypt-toggle-password-visibility,
+#staticrypt-remember-label {
+    display: none;
+}
+
+#staticrypt-form {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.staticrypt-password-container {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    border: 1.25px solid #000;
+    border-radius: 0;
+    background: #f5f5f5;
+}
+
+.staticrypt-form input[type="password"],
+.staticrypt-form input[type="text"] {
+    min-height: 40px;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #000;
+    font: inherit;
+    font-size: 16px;
+}
+
+.staticrypt-form .staticrypt-decrypt-button {
+    width: auto;
+    min-height: 40px;
+    padding: 7px 10px;
+    border: 1.25px solid #000;
+    border-radius: 0;
+    background: #f5f5f5;
+    color: #000;
+    font: inherit;
+    font-size: 16px;
+    text-transform: none;
+}
+
+.staticrypt-form .staticrypt-decrypt-button:hover,
+.staticrypt-form .staticrypt-decrypt-button:active,
+.staticrypt-form .staticrypt-decrypt-button:focus {
+    background: #e8e8e8;
+    filter: none;
+}
+
+@media (max-width: 480px) {
+    .staticrypt-page {
+        width: min(90vw, 420px);
+        margin-top: 18vh;
+    }
+
+    .staticrypt-form input[type="password"],
+    .staticrypt-form input[type="text"],
+    .staticrypt-form .staticrypt-decrypt-button {
+        font-size: 16px;
+    }
+}

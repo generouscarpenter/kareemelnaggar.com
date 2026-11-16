@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "encrypt:engineering": "node scripts/encrypt-engineering.mjs"
+  },
+  "devDependencies": {
+    "staticrypt": "3.5.4"
+  }
+}
