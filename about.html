@@ -48,6 +48,37 @@
         cursor: grabbing;
       }
 
+      .about-photo-mobile {
+        display: none;
+      }
+
+      .spotlight {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5vh 5vw;
+        box-sizing: border-box;
+        background: rgba(0, 0, 0, 0.72);
+        cursor: zoom-out;
+      }
+
+      .spotlight[hidden] {
+        display: none;
+      }
+
+      .spotlight img {
+        width: min(90vw, 600px);
+        max-width: 90vw;
+        max-height: 90vh;
+        height: auto;
+        object-fit: contain;
+        border: 1px solid black;
+        cursor: default;
+      }
+
       .about-copy {
         position: absolute;
         z-index: 2;
@@ -86,7 +117,7 @@
         z-index: 20;
       }
 
-      @media (max-width: 1600px), (max-height: 620px) {
+      @media (max-width: 1200px), (max-height: 620px) {
         body {
           display: block;
         }
@@ -113,6 +144,10 @@
           width: 100%;
           height: auto;
           aspect-ratio: 4 / 3;
+        }
+
+        .about-photo-mobile {
+          display: block;
         }
 
         .about-copy {
@@ -219,6 +254,14 @@
 
       const stage = document.getElementById("about-stage");
       const copy = document.getElementById("about-copy");
+      const spotlight = document.createElement("div");
+      spotlight.className = "spotlight";
+      spotlight.hidden = true;
+      spotlight.setAttribute("aria-label", "Close enlarged photo");
+      const spotlightImage = document.createElement("img");
+      spotlight.appendChild(spotlightImage);
+      document.body.appendChild(spotlight);
+
       const photos = photoFiles.map((filename, index) => {
         const photo = document.createElement("img");
         photo.className = "about-photo";
@@ -232,14 +275,21 @@
         ).appendChild(photo);
         return photo;
       });
+      const mobilePhoto = document.createElement("img");
+      mobilePhoto.className = "about-photo about-photo-mobile";
+      mobilePhoto.src = "about/perform.png";
+      mobilePhoto.alt = "";
+      mobilePhoto.draggable = false;
+      document.getElementById("about-photos-bottom").appendChild(mobilePhoto);
+      const allPhotos = [...photos, mobilePhoto];
 
       function layoutAbout() {
-        if (window.matchMedia("(max-width: 1600px), (max-height: 620px)").matches) {
+        if (window.matchMedia("(max-width: 1200px), (max-height: 620px)").matches) {
           stage.style.height = "";
           stage.style.minHeight = "";
           copy.style.top = "";
           copy.style.width = "";
-          photos.forEach((photo) => {
+          allPhotos.forEach((photo) => {
             photo.style.left = "";
             photo.style.top = "";
             photo.style.width = "";
@@ -260,15 +310,65 @@
           photo.style.left = window.innerWidth * layout.left + "px";
           photo.style.top = window.innerHeight * layout.top + "px";
         });
+
+        const stageRect = stage.getBoundingClientRect();
+        const copyRect = copy.getBoundingClientRect();
+        const copyBox = {
+          left: copyRect.left - stageRect.left,
+          top: copyRect.top - stageRect.top,
+          right: copyRect.right - stageRect.left,
+          bottom: copyRect.bottom - stageRect.top,
+        };
+
+        const gap = 24;
+
+        photos.forEach((photo) => {
+          let left = Number.parseFloat(photo.style.left) || 0;
+          let top = Number.parseFloat(photo.style.top) || 0;
+          const width = photo.offsetWidth;
+          const height = photo.offsetHeight;
+
+          const overlapsCopy =
+            left < copyBox.right + gap &&
+            left + width > copyBox.left - gap &&
+            top < copyBox.bottom + gap &&
+            top + height > copyBox.top - gap;
+
+          if (!overlapsCopy) return;
+
+          const candidates = [
+            { left: copyBox.left - gap - width, top },
+            { left: copyBox.right + gap, top },
+            { left, top: copyBox.top - gap - height },
+            { left, top: copyBox.bottom + gap },
+          ].filter((candidate) =>
+            candidate.left >= 0 &&
+            candidate.top >= 0 &&
+            candidate.left + width <= window.innerWidth &&
+            candidate.top + height <= window.innerHeight
+          );
+
+          if (candidates.length === 0) return;
+
+          const nearest = candidates.reduce((best, candidate) => {
+            const bestDistance = Math.hypot(best.left - left, best.top - top);
+            const candidateDistance = Math.hypot(candidate.left - left, candidate.top - top);
+            return candidateDistance < bestDistance ? candidate : best;
+          });
+
+          photo.style.left = nearest.left + "px";
+          photo.style.top = nearest.top + "px";
+        });
       }
 
-      photos.forEach((photo) => {
+      allPhotos.forEach((photo) => {
         let startX = 0;
         let startY = 0;
         let startLeft = 0;
         let startTop = 0;
         let activePointerId = null;
         let dragging = false;
+        let hasDragged = false;
 
         photo.addEventListener("dragstart", (event) => event.preventDefault());
 
@@ -288,7 +388,10 @@
           if (activePointerId !== event.pointerId) return;
           const deltaX = event.clientX - startX;
           const deltaY = event.clientY - startY;
-          if (!dragging && Math.hypot(deltaX, deltaY) > 8) dragging = true;
+          if (!dragging && Math.hypot(deltaX, deltaY) > 8) {
+            dragging = true;
+            hasDragged = true;
+          }
           if (!dragging) return;
           photo.style.left = startLeft + deltaX + "px";
           photo.style.top = startTop + deltaY + "px";
@@ -303,6 +406,32 @@
 
         photo.addEventListener("pointerup", endDrag);
         photo.addEventListener("pointercancel", endDrag);
+
+        photo.addEventListener("click", (event) => {
+          if (hasDragged) {
+            event.preventDefault();
+            event.stopPropagation();
+            hasDragged = false;
+            return;
+          }
+          spotlightImage.src = photo.src;
+          spotlight.hidden = false;
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      spotlight.addEventListener("click", (event) => {
+        if (event.target !== spotlightImage) {
+          spotlight.hidden = true;
+          document.body.style.overflow = "";
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !spotlight.hidden) {
+          spotlight.hidden = true;
+          document.body.style.overflow = "";
+        }
       });
 
       layoutAbout();
