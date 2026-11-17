@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>about</title>
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        background: #f5f5f5;
+      }
+
+      body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      .about-stage {
+        position: relative;
+        flex: none;
+        width: 100%;
+        height: 100vh;
+        min-height: 100vh;
+      }
+
+      .about-photo-set {
+        display: contents;
+      }
+
+      .about-photo {
+        position: absolute;
+        display: block;
+        border: 1px solid black;
+        background: rgba(237, 237, 237, 0.6);
+        object-fit: cover;
+        cursor: grab;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      .about-photo:active {
+        cursor: grabbing;
+      }
+
+      .about-copy {
+        position: absolute;
+        z-index: 2;
+        left: 50%;
+        box-sizing: border-box;
+        padding: 0;
+        transform: translate(-50%, -50%);
+        color: black;
+        font-size: 22px;
+        line-height: 1.35;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+
+      .about-photo[data-index="4"],
+      .about-photo[data-index="5"] {
+        opacity: 0.85;
+      }
+
+      .about-copy p {
+        margin: 0;
+      }
+
+      .about-copy a {
+        color: inherit;
+      }
+
+      .site-footer {
+        position: fixed;
+        right: 0;
+        bottom: 12px;
+        left: 0;
+        width: auto;
+        margin-top: 0;
+        padding: 0;
+        z-index: 20;
+      }
+
+      @media (max-width: 1200px), (max-height: 620px) {
+        body {
+          display: block;
+        }
+
+        .about-stage {
+          display: grid;
+          height: auto;
+          min-height: 0;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          align-items: center;
+          gap: 18px;
+          padding: 20px 32px 28px;
+          box-sizing: border-box;
+        }
+
+        .about-photo-set {
+          display: contents;
+        }
+
+        .about-photo {
+          position: relative;
+          top: auto;
+          left: auto;
+          width: 100%;
+          height: auto;
+          aspect-ratio: 4 / 3;
+        }
+
+        .about-copy {
+          position: relative;
+          z-index: 2;
+          grid-column: 1 / -1;
+          order: -1;
+          width: 100%;
+          max-width: 860px;
+          margin: 0 auto;
+          padding: 0;
+          left: auto;
+          top: auto;
+          transform: none;
+          font-size: 22px;
+        }
+
+        .site-footer {
+          position: static;
+          right: auto;
+          bottom: auto;
+          left: auto;
+          padding: 0 0 24px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .about-stage {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          padding-right: 24px;
+          padding-left: 24px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .about-stage {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+
+        .about-copy {
+          font-size: 19px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="about-stage" id="about-stage" aria-label="About Kareem">
+      <div class="about-photo-set" id="about-photos-top"></div>
+      <article class="about-copy" id="about-copy">
+        <p>
+          Hellooo! My name is Kareem El Naggar and I’m an electrical engineering &amp; music student at Brown University interested in electronics design, digital signal processing, creative technology, audio engineering/production, and sound design/synthesis. I’m currently one of the managers of the <a href="https://www.browndesignworkshop.org/" target="_blank" rel="noopener noreferrer">Brown Design Workshop</a>, I play in the band <a href="https://www.instagram.com/cocoon0__0/" target="_blank" rel="noopener noreferrer">Cocoon</a>, and I have a show on Brown Student Radio called scribbles (<a href="https://scribbles2006.neocities.org/" target="_blank" rel="noopener noreferrer">show archive</a>). I’m usually making music, developing workshops for the BDW (currently trying to figure out how to build a digital radio and teach others how to do so as well!), or eating a bartlett pear (the best kind of pear). Feel free to poke around my website to see what I’m working on and have made, and you can email me at <a href="mailto:kareem_el_naggar@brown.edu">kareem_el_naggar@brown.edu</a> with any questions or inquiries. Thanks 4 stopping by my site!
+        </p>
+      </article>
+      <div class="about-photo-set" id="about-photos-bottom"></div>
+    </main>
+
+    <footer class="site-footer">
+      <table class="footer-table">
+        <tr>
+          <td>
+            <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
+          </td>
+        </tr>
+      </table>
+    </footer>
+
+    <script>
+      function wrapLetters(element) {
+        const text = element.textContent;
+        element.textContent = "";
+        [...text].forEach((char) => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          element.appendChild(span);
+        });
+      }
+
+      const footer = document.querySelector(".footer-text");
+      footer.textContent = `kareem el naggar ${new Date().getFullYear()}`;
+      wrapLetters(footer);
+
+      const photoFiles = [
+        "DSC00129.png",
+        "IMG_1574.png",
+        "IMG_2411.png",
+        "IMG_9393.png",
+        "IMG_7227.png",
+        "IMG_7997.png",
+        "IMG_9361.png",
+        "IMG_2416.png",
+      ];
+
+      const desktopLayout = [
+        { left: 0.074, top: 0.145, width: 0.137 },
+        { left: 0.272, top: 0.018, width: 0.137 },
+        { left: 0.562, top: 0.052, width: 0.137 },
+        { left: 0.827, top: 0.145, width: 0.112 },
+        { left: 0.128, top: 0.480, width: 0.137 },
+        { left: 0.727, top: 0.464, width: 0.137 },
+        { left: 0.229, top: 0.760, width: 0.112 },
+        { left: 0.628, top: 0.756, width: 0.137 },
+      ];
+
+      const stage = document.getElementById("about-stage");
+      const copy = document.getElementById("about-copy");
+      const photos = photoFiles.map((filename, index) => {
+        const photo = document.createElement("img");
+        photo.className = "about-photo";
+        photo.src = `about/${filename}`;
+        photo.alt = "";
+        photo.draggable = false;
+        photo.dataset.index = String(index);
+        (index < 4
+          ? document.getElementById("about-photos-top")
+          : document.getElementById("about-photos-bottom")
+        ).appendChild(photo);
+        return photo;
+      });
+
+      function layoutAbout() {
+        if (window.matchMedia("(max-width: 1200px), (max-height: 620px)").matches) {
+          stage.style.height = "";
+          stage.style.minHeight = "";
+          copy.style.top = "";
+          copy.style.width = "";
+          photos.forEach((photo) => {
+            photo.style.left = "";
+            photo.style.top = "";
+            photo.style.width = "";
+            photo.style.height = "";
+          });
+          return;
+        }
+
+        stage.style.height = window.innerHeight + "px";
+        copy.style.width = Math.min(700, window.innerWidth - 48) + "px";
+        copy.style.top = "50%";
+
+        photos.forEach((photo, index) => {
+          const layout = desktopLayout[index];
+          const width = Math.min(window.innerWidth * layout.width, 220);
+          photo.style.width = width + "px";
+          photo.style.height = width * 0.75 + "px";
+          photo.style.left = window.innerWidth * layout.left + "px";
+          photo.style.top = window.innerHeight * layout.top + "px";
+        });
+      }
+
+      photos.forEach((photo) => {
+        let startX = 0;
+        let startY = 0;
+        let startLeft = 0;
+        let startTop = 0;
+        let activePointerId = null;
+        let dragging = false;
+
+        photo.addEventListener("dragstart", (event) => event.preventDefault());
+
+        photo.addEventListener("pointerdown", (event) => {
+          if (event.pointerType === "mouse" && event.button !== 0) return;
+          startX = event.clientX;
+          startY = event.clientY;
+          startLeft = Number.parseFloat(photo.style.left) || 0;
+          startTop = Number.parseFloat(photo.style.top) || 0;
+          activePointerId = event.pointerId;
+          dragging = false;
+          photo.style.zIndex = "10";
+          photo.setPointerCapture(event.pointerId);
+        });
+
+        photo.addEventListener("pointermove", (event) => {
+          if (activePointerId !== event.pointerId) return;
+          const deltaX = event.clientX - startX;
+          const deltaY = event.clientY - startY;
+          if (!dragging && Math.hypot(deltaX, deltaY) > 8) dragging = true;
+          if (!dragging) return;
+          photo.style.left = startLeft + deltaX + "px";
+          photo.style.top = startTop + deltaY + "px";
+        });
+
+        const endDrag = (event) => {
+          if (activePointerId !== event.pointerId) return;
+          activePointerId = null;
+          photo.style.zIndex = "1";
+          photo.releasePointerCapture(event.pointerId);
+        };
+
+        photo.addEventListener("pointerup", endDrag);
+        photo.addEventListener("pointercancel", endDrag);
+      });
+
+      layoutAbout();
+      window.addEventListener("resize", layoutAbout);
+      document.fonts.ready.then(layoutAbout);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>videos</title>
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        background: #f5f5f5;
+      }
+
+      body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      .video-gallery {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+        align-items: center;
+      }
+
+      .video-carousel {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px 40px 0;
+        box-sizing: border-box;
+      }
+
+      .video-track {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+      }
+
+      .video-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      .video-slide {
+        display: flex;
+        flex: 0 0 100%;
+        min-width: 0;
+        height: min(72vh, 720px);
+        align-items: center;
+        justify-content: center;
+        scroll-snap-align: start;
+      }
+
+      .video-player {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .video-player video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        object-fit: contain;
+      }
+
+      .video-toggle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: grid;
+        width: 64px;
+        height: 64px;
+        padding: 0;
+        place-items: center;
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.58);
+        cursor: pointer;
+      }
+
+      .video-toggle:hover {
+        background: rgba(0, 0, 0, 0.78);
+      }
+
+      .video-toggle[data-playing="true"] {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .video-toggle[data-playing="true"]:focus-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .video-toggle:focus-visible {
+        outline: 2px solid white;
+        outline-offset: 3px;
+      }
+
+      .video-toggle-icon {
+        width: 0;
+        height: 0;
+        margin-left: 4px;
+        border-top: 11px solid transparent;
+        border-bottom: 11px solid transparent;
+        border-left: 16px solid white;
+      }
+
+      .video-toggle[data-playing="true"] .video-toggle-icon {
+        width: 14px;
+        height: 20px;
+        margin-left: 0;
+        border: 0;
+        background: linear-gradient(to right, white 0 4px, transparent 4px 10px, white 10px 14px);
+      }
+
+      .carousel-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding-top: 14px;
+      }
+
+      .carousel-controls button {
+        padding: 5px 8px;
+        border: 1.25px solid black;
+        background: rgba(237, 237, 237, 0.6);
+        color: black;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .carousel-controls button:disabled {
+        cursor: default;
+        opacity: 0.45;
+      }
+
+      .carousel-status {
+        min-width: 4em;
+        text-align: center;
+      }
+
+      .site-footer {
+        position: static;
+        width: auto;
+        margin-top: auto;
+        padding: 15px 0 24px;
+      }
+
+      @media (max-width: 480px) {
+        .video-carousel {
+          padding: 12px 12px 0;
+        }
+
+        .video-slide {
+          height: min(68vh, 720px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="video-gallery" aria-label="Videos">
+      <section class="video-carousel" aria-label="Video carousel">
+        <div class="video-track" id="video-track" tabindex="0" aria-label="Swipe through videos"></div>
+        <div class="carousel-controls">
+          <button type="button" id="previous-video" aria-label="Previous video">← previous</button>
+          <span class="carousel-status" id="video-status" aria-live="polite">1 / 14</span>
+          <button type="button" id="next-video" aria-label="Next video">next →</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <table class="footer-table">
+        <tr>
+          <td>
+            <a href="index.html" class="footer-text" aria-label="kareem el naggar 2026">kareem el naggar 2026</a>
+          </td>
+        </tr>
+      </table>
+    </footer>
+
+    <script>
+      const videoFiles = [
+        "Ahamoment.mp4",
+        "AllOfitFlicker.mp4",
+        "anvilvisual.mp4",
+        "asciiswings.mp4",
+        "datasnake1.mp4",
+        "datasnake2.mp4",
+        "datasnake3.mp4",
+        "homegrownvisulalsDog2.mp4",
+        "imenope.mp4",
+        "PartyOnAFloatingCake.mp4",
+        "picobuddy.mp4",
+        "thinking.mov",
+        "Tractor.mp4",
+        "TrynaREmemebr....mp4",
+      ];
+
+      const track = document.getElementById("video-track");
+      const slides = videoFiles.map((filename, index) => {
+        const slide = document.createElement("div");
+        slide.className = "video-slide";
+
+        const player = document.createElement("div");
+        player.className = "video-player";
+
+        const video = document.createElement("video");
+        video.controls = false;
+        video.loop = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+        video.setAttribute("aria-label", `Video ${index + 1} of ${videoFiles.length}`);
+
+        const source = document.createElement("source");
+        source.src = `video/${encodeURIComponent(filename)}`;
+        source.type = filename.toLowerCase().endsWith(".mov") ? "video/quicktime" : "video/mp4";
+        video.appendChild(source);
+
+        const toggle = document.createElement("button");
+        toggle.className = "video-toggle";
+        toggle.type = "button";
+        toggle.dataset.playing = "false";
+        toggle.setAttribute("aria-label", `Play video ${index + 1}`);
+        toggle.setAttribute("aria-pressed", "false");
+        const icon = document.createElement("span");
+        icon.className = "video-toggle-icon";
+        icon.setAttribute("aria-hidden", "true");
+        toggle.appendChild(icon);
+
+        player.append(video, toggle);
+        slide.appendChild(player);
+        track.appendChild(slide);
+        return slide;
+      });
+
+      const previousButton = document.getElementById("previous-video");
+      const nextButton = document.getElementById("next-video");
+      const status = document.getElementById("video-status");
+      let currentIndex = 0;
+      let scrollTimer;
+
+      function updateControls() {
+        previousButton.disabled = currentIndex === 0;
+        nextButton.disabled = currentIndex === slides.length - 1;
+        status.textContent = `${currentIndex + 1} / ${slides.length}`;
+      }
+
+      function goToVideo(index) {
+        currentIndex = Math.max(0, Math.min(index, slides.length - 1));
+        track.scrollTo({ left: currentIndex * track.clientWidth, behavior: "auto" });
+        slides.forEach((slide, slideIndex) => {
+          if (slideIndex !== currentIndex) slide.querySelector("video").pause();
+        });
+        updateControls();
+      }
+
+      function updatePlaybackButton(video, button, index) {
+        const isPlaying = !video.paused && !video.ended;
+        button.dataset.playing = String(isPlaying);
+        button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Play"} video ${index + 1}`);
+        button.setAttribute("aria-pressed", String(isPlaying));
+      }
+
+      function togglePlayback(video) {
+        if (video.paused || video.ended) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      }
+
+      previousButton.addEventListener("click", () => goToVideo(currentIndex - 1));
+      nextButton.addEventListener("click", () => goToVideo(currentIndex + 1));
+
+      track.addEventListener("scroll", () => {
+        window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(() => {
+          currentIndex = Math.max(0, Math.min(
+            Math.round(track.scrollLeft / track.clientWidth),
+            slides.length - 1
+          ));
+          slides.forEach((slide, slideIndex) => {
+            if (slideIndex !== currentIndex) slide.querySelector("video").pause();
+          });
+          updateControls();
+        }, 80);
+      });
+
+      track.addEventListener("keydown", (event) => {
+        if (event.target !== track) return;
+        if (event.key === "ArrowLeft") goToVideo(currentIndex - 1);
+        if (event.key === "ArrowRight") goToVideo(currentIndex + 1);
+      });
+
+      slides.forEach((slide, index) => {
+        const video = slide.querySelector("video");
+        const toggle = slide.querySelector(".video-toggle");
+        toggle.addEventListener("click", () => togglePlayback(video));
+        video.addEventListener("click", () => togglePlayback(video));
+        video.addEventListener("play", () => {
+          slides.forEach((otherSlide, otherIndex) => {
+            if (otherIndex !== index) otherSlide.querySelector("video").pause();
+          });
+          updatePlaybackButton(video, toggle, index);
+        });
+        video.addEventListener("pause", () => updatePlaybackButton(video, toggle, index));
+        video.addEventListener("ended", () => updatePlaybackButton(video, toggle, index));
+      });
+
+      updateControls();
+
+      function wrapLetters(element) {
+        const text = element.textContent;
+        element.textContent = "";
+        [...text].forEach((char) => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          element.appendChild(span);
+        });
+      }
+
+      const footer = document.querySelector(".footer-text");
+      footer.textContent = `kareem el naggar ${new Date().getFullYear()}`;
+      wrapLetters(footer);
+    </script>
+  </body>
+</html>
