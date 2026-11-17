@@ -23,6 +23,28 @@
   font-family: "microsoftsansserif", Arial, sans-serif;
   }
 
+  .page-heading,
+  .staticrypt-title {
+    font-size: 24px;
+    font-weight: normal;
+    line-height: normal;
+  }
+
+  .page-heading {
+    margin: 32px 12px 0;
+    text-align: center;
+  }
+
+  .page-heading a {
+    color: inherit;
+  }
+
+  @media (max-width: 680px) {
+    .page-heading {
+      margin-top: 24px;
+    }
+  }
+
   .site-header {
     position: relative;
     z-index: 1;
