@@ -82,6 +82,19 @@ try {
     throw new Error("StatiCrypt did not produce the expected encrypted page.");
   }
 
+  const generatedHtml = readFileSync(encryptedFile, "utf8");
+  const unpatchedRememberInput =
+    'const password = document.getElementById("staticrypt-password").value,\n' +
+    '                    isRememberChecked = document.getElementById("staticrypt-remember").checked;';
+  const optionalRememberInput =
+    'const password = document.getElementById("staticrypt-password").value,\n' +
+    '                    rememberCheckbox = document.getElementById("staticrypt-remember"),\n' +
+    "                    isRememberChecked = rememberCheckbox ? rememberCheckbox.checked : false;";
+  if (!generatedHtml.includes(unpatchedRememberInput)) {
+    throw new Error("StatiCrypt's generated password handler has an unexpected format.");
+  }
+  writeFileSync(encryptedFile, generatedHtml.replace(unpatchedRememberInput, optionalRememberInput));
+
   copyFileSync(encryptedFile, path.join(projectRoot, "engineering.html"));
 } finally {
   rmSync(outputDirectory, { recursive: true, force: true });
