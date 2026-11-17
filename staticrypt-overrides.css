@@ -26,11 +26,18 @@ body.staticrypt-body {
     font-family: "microsoftsansserif", Arial, sans-serif;
 }
 
+.staticrypt-content::before,
+.staticrypt-title {
+    font-family: "microsoftsansserif", Arial, sans-serif;
+    font-size: 24px;
+    font-weight: normal;
+    line-height: normal;
+}
+
 .staticrypt-content::before {
     content: "engineering projects";
     display: block;
     margin: 32px 12px 0;
-    font-size: 24px;
     text-align: center;
 }
 
@@ -54,8 +61,6 @@ body.staticrypt-body {
 
 .staticrypt-title {
     margin: 0 0 12px;
-    font-size: 24px;
-    font-weight: normal;
 }
 
 .staticrypt-instructions p:empty:not(.staticrypt-title) {
