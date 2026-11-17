@@ -57,8 +57,6 @@ const cliArguments = [
   templateFile,
   "--template-title",
   "password protected",
-  "--template-instructions",
-  "Enter the password to view my engineering portfolio.",
   "--template-placeholder",
   "password",
   "--template-button",

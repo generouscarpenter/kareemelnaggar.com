@@ -49,13 +49,17 @@ body.staticrypt-body {
 }
 
 .staticrypt-instructions {
-    margin: 0 0 16px;
+    margin: 0;
 }
 
 .staticrypt-title {
     margin: 0 0 12px;
     font-size: 24px;
     font-weight: normal;
+}
+
+.staticrypt-instructions p:empty:not(.staticrypt-title) {
+    display: none;
 }
 
 .staticrypt-instructions p:not(.staticrypt-title) {
