@@ -21,133 +21,95 @@
       }
 
       .video-gallery {
-        display: flex;
         flex: 1;
-        min-height: 0;
-        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 24px 20px;
       }
 
-      .video-carousel {
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+        align-content: start;
+        gap: 14px;
         width: 100%;
         max-width: 1400px;
         margin: 0 auto;
-        padding: 20px 40px 0;
-        box-sizing: border-box;
       }
 
-      .video-track {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none;
-        overscroll-behavior-x: contain;
-      }
-
-      .video-track::-webkit-scrollbar {
-        display: none;
-      }
-
-      .video-slide {
-        display: flex;
-        flex: 0 0 100%;
-        min-width: 0;
-        height: min(72vh, 720px);
-        align-items: center;
-        justify-content: center;
-        scroll-snap-align: start;
-      }
-
-      .video-player {
+      .video-card {
         position: relative;
+        display: block;
         width: 100%;
-        height: 100%;
+        aspect-ratio: 16 / 9;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid black;
+        background: #000;
+        cursor: zoom-in;
       }
 
-      .video-player video {
+      .video-card[data-autoplay-blocked="true"]::after {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 0, 0, 0.45);
+        color: white;
+        content: "Tap to play with sound";
+        pointer-events: none;
+      }
+
+      .video-card:focus-visible {
+        outline: 2px solid black;
+        outline-offset: 3px;
+      }
+
+      .video-card video {
         display: block;
         width: 100%;
         height: 100%;
         background: #000;
         object-fit: contain;
-      }
-
-      .video-toggle {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        display: grid;
-        width: 64px;
-        height: 64px;
-        padding: 0;
-        place-items: center;
-        transform: translate(-50%, -50%);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        background: rgba(0, 0, 0, 0.58);
-        cursor: pointer;
-      }
-
-      .video-toggle:hover {
-        background: rgba(0, 0, 0, 0.78);
-      }
-
-      .video-toggle[data-playing="true"] {
-        opacity: 0;
         pointer-events: none;
       }
 
-      .video-toggle[data-playing="true"]:focus-visible {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .video-toggle:focus-visible {
-        outline: 2px solid white;
-        outline-offset: 3px;
-      }
-
-      .video-toggle-icon {
-        width: 0;
-        height: 0;
-        margin-left: 4px;
-        border-top: 11px solid transparent;
-        border-bottom: 11px solid transparent;
-        border-left: 16px solid white;
-      }
-
-      .video-toggle[data-playing="true"] .video-toggle-icon {
-        width: 14px;
-        height: 20px;
-        margin-left: 0;
-        border: 0;
-        background: linear-gradient(to right, white 0 4px, transparent 4px 10px, white 10px 14px);
-      }
-
-      .carousel-controls {
+      .video-spotlight {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 12px;
-        padding-top: 14px;
+        padding: 5vh 5vw;
+        box-sizing: border-box;
+        background: rgba(0, 0, 0, 0.78);
       }
 
-      .carousel-controls button {
-        padding: 5px 8px;
-        border: 1.25px solid black;
-        background: rgba(237, 237, 237, 0.6);
-        color: black;
-        font: inherit;
-        cursor: pointer;
+      .video-spotlight[hidden] {
+        display: none;
       }
 
-      .carousel-controls button:disabled {
-        cursor: default;
-        opacity: 0.45;
+      .video-spotlight video {
+        display: block;
+        width: min(90vw, 1100px);
+        max-width: 90vw;
+        max-height: 90vh;
+        height: auto;
+        border: 1px solid black;
+        background: #000;
+        object-fit: contain;
       }
 
-      .carousel-status {
-        min-width: 4em;
+      .video-playback-hint {
+        position: absolute;
+        right: 12px;
+        bottom: 8px;
+        left: 12px;
+        margin: 0;
+        color: white;
         text-align: center;
+        text-shadow: 0 1px 3px black;
       }
 
       .site-footer {
@@ -158,27 +120,29 @@
       }
 
       @media (max-width: 480px) {
-        .video-carousel {
-          padding: 12px 12px 0;
-        }
-
-        .video-slide {
-          height: min(68vh, 720px);
+        .video-gallery {
+          padding: 16px 12px;
         }
       }
     </style>
   </head>
   <body>
     <main class="video-gallery" aria-label="Videos">
-      <section class="video-carousel" aria-label="Video carousel">
-        <div class="video-track" id="video-track" tabindex="0" aria-label="Swipe through videos"></div>
-        <div class="carousel-controls">
-          <button type="button" id="previous-video" aria-label="Previous video">← previous</button>
-          <span class="carousel-status" id="video-status" aria-live="polite">1 / 14</span>
-          <button type="button" id="next-video" aria-label="Next video">next →</button>
-        </div>
-      </section>
+      <div class="video-grid" id="video-grid" aria-label="Autoplaying video previews"></div>
     </main>
+
+    <div
+      class="video-spotlight"
+      id="video-spotlight"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Video player"
+      hidden
+    >
+      <p class="video-playback-hint" id="video-playback-hint" hidden>
+        Press play to start the video with sound.
+      </p>
+    </div>
 
     <footer class="site-footer">
       <table class="footer-table">
@@ -202,24 +166,65 @@
         "homegrownvisulalsDog2.mp4",
         "imenope.mp4",
         "picobuddy.mp4",
-        "thinking.mov",
         "Tractor.mp4",
         "TrynaREmemebr....mp4",
       ];
 
-      const track = document.getElementById("video-track");
-      const slides = videoFiles.map((filename, index) => {
-        const slide = document.createElement("div");
-        slide.className = "video-slide";
+      const videoGrid = document.getElementById("video-grid");
+      const spotlight = document.getElementById("video-spotlight");
+      const playbackHint = document.getElementById("video-playback-hint");
+      let activeVideo = null;
+      let activeCard = null;
+      let previewPlaceholder = null;
 
-        const player = document.createElement("div");
-        player.className = "video-player";
+      function openVideo(video, card) {
+        activeVideo = video;
+        activeCard = card;
+        previewPlaceholder = document.createElement("span");
+        previewPlaceholder.setAttribute("aria-hidden", "true");
+        card.replaceChild(previewPlaceholder, video);
 
+        video.controls = true;
+        video.muted = false;
+        spotlight.insertBefore(video, playbackHint);
+        spotlight.hidden = false;
+        document.body.style.overflow = "hidden";
+        video.focus();
+
+        if (video.paused) {
+          video.play().catch(() => {
+            playbackHint.hidden = false;
+          });
+        }
+      }
+
+      function closeVideo() {
+        if (!activeVideo || !activeCard || !previewPlaceholder) return;
+
+        activeVideo.controls = false;
+        activeVideo.muted = true;
+        activeCard.replaceChild(activeVideo, previewPlaceholder);
+        spotlight.hidden = true;
+        playbackHint.hidden = true;
+        document.body.style.overflow = "";
+        activeCard.focus();
+        activeVideo = null;
+        activeCard = null;
+        previewPlaceholder = null;
+      }
+
+      videoFiles.forEach((filename, index) => {
+        const card = document.createElement("button");
+        card.className = "video-card";
+        card.type = "button";
+        card.setAttribute("aria-label", `Open video ${index + 1} with sound`);
         const video = document.createElement("video");
+        video.autoplay = true;
+        video.muted = true;
         video.controls = false;
         video.loop = true;
         video.playsInline = true;
-        video.preload = "metadata";
+        video.preload = "auto";
         video.setAttribute("aria-label", `Video ${index + 1} of ${videoFiles.length}`);
 
         const source = document.createElement("source");
@@ -227,98 +232,24 @@
         source.type = filename.toLowerCase().endsWith(".mov") ? "video/quicktime" : "video/mp4";
         video.appendChild(source);
 
-        const toggle = document.createElement("button");
-        toggle.className = "video-toggle";
-        toggle.type = "button";
-        toggle.dataset.playing = "false";
-        toggle.setAttribute("aria-label", `Play video ${index + 1}`);
-        toggle.setAttribute("aria-pressed", "false");
-        const icon = document.createElement("span");
-        icon.className = "video-toggle-icon";
-        icon.setAttribute("aria-hidden", "true");
-        toggle.appendChild(icon);
-
-        player.append(video, toggle);
-        slide.appendChild(player);
-        track.appendChild(slide);
-        return slide;
-      });
-
-      const previousButton = document.getElementById("previous-video");
-      const nextButton = document.getElementById("next-video");
-      const status = document.getElementById("video-status");
-      let currentIndex = 0;
-      let scrollTimer;
-
-      function updateControls() {
-        previousButton.disabled = currentIndex === 0;
-        nextButton.disabled = currentIndex === slides.length - 1;
-        status.textContent = `${currentIndex + 1} / ${slides.length}`;
-      }
-
-      function goToVideo(index) {
-        currentIndex = Math.max(0, Math.min(index, slides.length - 1));
-        track.scrollTo({ left: currentIndex * track.clientWidth, behavior: "auto" });
-        slides.forEach((slide, slideIndex) => {
-          if (slideIndex !== currentIndex) slide.querySelector("video").pause();
+        card.appendChild(video);
+        card.addEventListener("click", () => openVideo(video, card));
+        videoGrid.appendChild(card);
+        video.play().catch(() => {
+          card.dataset.autoplayBlocked = "true";
         });
-        updateControls();
-      }
-
-      function updatePlaybackButton(video, button, index) {
-        const isPlaying = !video.paused && !video.ended;
-        button.dataset.playing = String(isPlaying);
-        button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Play"} video ${index + 1}`);
-        button.setAttribute("aria-pressed", String(isPlaying));
-      }
-
-      function togglePlayback(video) {
-        if (video.paused || video.ended) {
-          video.play();
-        } else {
-          video.pause();
-        }
-      }
-
-      previousButton.addEventListener("click", () => goToVideo(currentIndex - 1));
-      nextButton.addEventListener("click", () => goToVideo(currentIndex + 1));
-
-      track.addEventListener("scroll", () => {
-        window.clearTimeout(scrollTimer);
-        scrollTimer = window.setTimeout(() => {
-          currentIndex = Math.max(0, Math.min(
-            Math.round(track.scrollLeft / track.clientWidth),
-            slides.length - 1
-          ));
-          slides.forEach((slide, slideIndex) => {
-            if (slideIndex !== currentIndex) slide.querySelector("video").pause();
-          });
-          updateControls();
-        }, 80);
-      });
-
-      track.addEventListener("keydown", (event) => {
-        if (event.target !== track) return;
-        if (event.key === "ArrowLeft") goToVideo(currentIndex - 1);
-        if (event.key === "ArrowRight") goToVideo(currentIndex + 1);
-      });
-
-      slides.forEach((slide, index) => {
-        const video = slide.querySelector("video");
-        const toggle = slide.querySelector(".video-toggle");
-        toggle.addEventListener("click", () => togglePlayback(video));
-        video.addEventListener("click", () => togglePlayback(video));
-        video.addEventListener("play", () => {
-          slides.forEach((otherSlide, otherIndex) => {
-            if (otherIndex !== index) otherSlide.querySelector("video").pause();
-          });
-          updatePlaybackButton(video, toggle, index);
+        video.addEventListener("playing", () => {
+          delete card.dataset.autoplayBlocked;
         });
-        video.addEventListener("pause", () => updatePlaybackButton(video, toggle, index));
-        video.addEventListener("ended", () => updatePlaybackButton(video, toggle, index));
       });
 
-      updateControls();
+      spotlight.addEventListener("click", (event) => {
+        if (event.target === spotlight) closeVideo();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !spotlight.hidden) closeVideo();
+      });
 
       function wrapLetters(element) {
         const text = element.textContent;
